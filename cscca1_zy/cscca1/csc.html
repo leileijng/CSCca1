@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+	<meta charset="utf-8" />
+</head>
+<body>
+     <p>Sample code to obtain weather data using jQuery.getJSON() method</p>
+    <div id="resultBox"></div>
+    <input type="button" id="getWeatherButton" value="Get Weather" />
+	
+<script src="jquery-3.3.1.min.js"></script>
+<script>
+
+    /*
+    Build the URI information before making a request.
+    */
+    // options :
+    var cityName = "SINGAPORE";
+    var apiKey = "3986ec3070504582bea90223202304";
+    var numOfdays = 1;
+    // build URI:
+    var uri = "http://api.worldweatheronline.com/premium/v1/weather.ashx?" + "&key=" + apiKey + "&q=" + cityName  + "&format=json&no_of_days=" + numOfdays + "&includeLocation=yes";
+    // uri-encode it to prevent errors :
+    uri = encodeURI(uri);
+    /* end of building URI information */
+
+    $('#getWeatherButton').on('click', getWeatherData);
+
+    function getWeatherData() {
+        jQuery.getJSON(uri).done(function (responseData) {
+            var output = "";
+            var countryName = (responseData.data.nearest_area[0].country[0].value);
+            var weatherData = responseData.data.weather;
+            for (index = 0; index < weatherData.length; index++) {
+                maxTemperatureInCelcius = weatherData[index].maxtempC;
+                minTemperatureInCelcius = weatherData[index].mintempC;
+                weatherDate = weatherData[index].date;
+                output += "Max C: " + maxTemperatureInCelcius + " Min C: " + minTemperatureInCelcius + " Date : " + weatherDate + "<br />";
+            }
+            $('#resultBox').html(output);
+        });
+    }
+
+</script>
+
+</body>
+</html>
